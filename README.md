@@ -7,7 +7,7 @@ A React single-page application that aggregates and displays RSS/Atom feeds mana
 ## What is this?
 
 **RSS Watch** is a feed-reader front-end for Tornevall Networks' curated collection of RSS/Atom sources.
-It talks to the `https://tools.tornevall.net/api/rss` backend, retrieves an overview of all registered feed sources and categories, and then fetches and renders individual feeds on demand.
+It talks to the Tools RSS API, retrieves an overview of all registered feed sources and categories, and then fetches and renders individual feeds on demand.
 
 Key features:
 
@@ -22,11 +22,18 @@ Full documentation: <https://tools.tornevall.net/docs/rsswatch>
 
 ## How it works
 
-1. On startup the app calls `GET https://tools.tornevall.net/api/rss` to retrieve the feed overview (list of sources and categories).
-2. When the user selects a category slug or a specific source ID, it calls `GET https://tools.tornevall.net/api/rss/feed/{selector}`.
+1. On startup the app calls `GET {API_BASE}/rss` to retrieve the feed overview (list of sources and categories).
+2. When the user selects a category slug or a specific source selector, it calls `GET {API_BASE}/rss/feed/{selector}`.
 3. The response XML is parsed in-browser by the custom `xmlParser` utility and rendered as a list of feed item cards.
 
-The front-end has no server-side rendering and no build-time configuration beyond the Vite defaults.
+The front-end has no server-side rendering. The API base can be configured at build/run time through Vite environment variables.
+
+### Current RSS API contract assumptions
+
+- Source rows may now expose an opaque `publicSelector`; this client treats that as the primary selector instead of assuming numeric `urlid` values.
+- Source rows may also expose additive link metadata like `feedUrl` and `categoryFeedUrl`.
+- Category rows may use either `title` or `name`; the client normalizes both.
+- Selectors are treated as opaque strings, which keeps hidden/public-hash feeds and future aliases compatible.
 
 ---
 
@@ -58,6 +65,17 @@ npm run dev
 ```
 
 The app is served at `http://localhost:5173` by default.
+
+### API base configuration
+
+You can point the app at another Tools host with either of these Vite variables:
+
+```bash
+VITE_TOOLS_API_BASE_URL=https://tools.tornevall.com/api
+VITE_TOOLS_BASE_URL=https://tools.tornevall.com
+```
+
+If both are missing, the app defaults to `https://tools.tornevall.net/api`.
 
 ---
 

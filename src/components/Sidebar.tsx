@@ -14,8 +14,12 @@ export function Sidebar({ overview, selected, onSelect }: SidebarProps) {
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
 
-  const selectedCategory = typeof selected === 'string' ? selected : null;
-  const selectedId = typeof selected === 'number' ? selected : null;
+  const selectedCategory = typeof selected === 'string' && overview.categories.some((category) => category.slug === selected)
+    ? selected
+    : null;
+  const selectedSourceSelector = typeof selected === 'string' && overview.urls.some((source) => source.selector === selected)
+    ? selected
+    : null;
 
   const filteredSources = useMemo(() => {
     let sources = overview.urls;
@@ -44,8 +48,8 @@ export function Sidebar({ overview, selected, onSelect }: SidebarProps) {
     onSelect(slug);
   }
 
-  function handleSourceSelect(urlid: number) {
-    onSelect(urlid);
+  function handleSourceSelect(selector: string) {
+    onSelect(selector);
   }
 
   return (
@@ -64,7 +68,7 @@ export function Sidebar({ overview, selected, onSelect }: SidebarProps) {
 
       <FeedList
         sources={filteredSources}
-        selectedId={selectedId}
+        selectedSelector={selectedSourceSelector}
         onSelect={handleSourceSelect}
       />
     </nav>

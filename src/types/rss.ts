@@ -2,10 +2,15 @@
 
 export interface RssFeedSource {
   urlid: number;
+  selector: string;
   title: string;
   url: string;
   category?: string;
   description?: string;
+  publicSelector?: string;
+  feedUrl?: string;
+  categoryFeedUrl?: string;
+  hidden?: boolean;
 }
 
 export interface RssCategory {
@@ -31,14 +36,7 @@ export interface FeedItem {
   category: string;
 }
 
-export type FeedSelector =
-  | number
-  | string
-  | 'analytics-daily'
-  | 'analytics-weekly'
-  | 'analytics-monthly'
-  | 'analytics-yearly'
-  | 'analytics-bulk';
+export type FeedSelector = string;
 
 export interface FeedState {
   items: FeedItem[];

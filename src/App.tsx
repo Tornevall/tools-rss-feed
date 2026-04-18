@@ -32,7 +32,7 @@ export default function App() {
   const effectiveSelected: FeedSelector | null =
     selected ??
     overview.categories[0]?.slug ??
-    overview.urls[0]?.urlid ??
+    overview.urls[0]?.selector ??
     null;
 
   return (
